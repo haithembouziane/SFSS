@@ -22,6 +22,8 @@ const DashboardHeader = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
+          <Link to="/">
+
           <div className="flex items-center space-x-2">
             <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none">
               <path d="M20 5L15 15L20 25L25 15L20 5Z" fill="#6B7A3E"/>
@@ -33,13 +35,13 @@ const DashboardHeader = () => {
               <span className="text-gray-700">-Nova</span>
             </span>
           </div>
-          
+          </Link>
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/crop-yield" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Dashboard</Link>
+            {/* <Link to="/crop-yield" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Dashboard</Link> */}
             <Link to="/crop-prediction" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Crop Prediction</Link>
             <Link to="/crop-yield" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Yield Prediction</Link>
-            <Link to="/genetics-prediction" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Genetics</Link>
+            <Link to="/genetics" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Genetics</Link>
             
             {/* User Profile Dropdown */}
             <div className="relative">

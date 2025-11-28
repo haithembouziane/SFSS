@@ -4,6 +4,7 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import CropPrediction from './pages/cropPrediction';
 import CropYieldPrediction from './pages/cropYield';
+import Genitics from './pages/genitics'
 import Profile from './pages/Profile';
 
 export default function App() {
@@ -31,6 +32,12 @@ export default function App() {
             path="/profile" 
             element={
                 <Profile />
+            } 
+          />
+          <Route 
+            path="/genetics" 
+            element={
+                <Genitics />
             } 
           />
         </Routes>

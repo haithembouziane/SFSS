@@ -1,6 +1,6 @@
 import React from 'react';
 import heroImage from '../assets/hero.png';
-
+import { Link } from 'react-router-dom';
 const HeroSection = () => {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
@@ -34,9 +34,11 @@ const HeroSection = () => {
             Unlock actionable insights with advanced crop prediction, yield forecasting,<br />
             and genomic best-coupling to optimize your harvest.
           </p>
-          <button  className="bg-[#6B7A3E] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#5A6A2E] transition-all transform hover:scale-105 shadow-lg">
-            Get Started
-          </button>
+          <Link to='/login'>
+            <button  className="bg-[#6B7A3E] text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-[#5A6A2E] transition-all transform hover:scale-105 shadow-lg">
+              Get Started
+            </button>
+          </Link>
         </div>
       </div>
     </section>

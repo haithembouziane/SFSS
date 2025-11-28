@@ -47,7 +47,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section className="relative py-20 bg-[#E8D5C4]">
+    <section id='services' className="relative py-20 bg-[#E8D5C4]">
       {/* Top Wave Divider */}
       <div className="absolute top-0 left-0 right-0 transform -translate-y-1">
         <svg viewBox="0 0 1440 100" className="w-full" preserveAspectRatio="none">
