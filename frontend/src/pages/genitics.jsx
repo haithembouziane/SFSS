@@ -77,7 +77,7 @@ const CropPrediction = () => {
                         <path d="M12 2L4 8v12h16V8l-8-6zm0 2.5L18 9v9H6V9l6-4.5z"/>
                       </svg>
                     </div>
-                    <h3 className="text-base font-bold text-white drop-shadow-md">Soil Type</h3>
+                    <h3 className="text-base font-bold text-dark drop-shadow-md">Soil Type</h3>
                   </div>
                   <input
                     type="file"
@@ -88,6 +88,29 @@ const CropPrediction = () => {
                 </div>
               </div>
 
+              {/* <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
+                background: 'linear-gradient(135deg, #C4A574 0%, #B8956A 100%)',
+                borderTop: '4px solid #D4B896',
+                borderBottom: '2px solid #A08560'
+              }}>
+                <div className="p-4 relative z-10">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L4 8v12h16V8l-8-6zm0 2.5L18 9v9H6V9l6-4.5z"/>
+                      </svg>
+                    </div>
+                    <h3 className="text-base font-bold text-white drop-shadow-md">Soil Type</h3>
+                  </div>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={(e) => handleJsonFileUpload(e, 'soilType')}
+                    className="w-full px-3 py-2 rounded-lg bg-white/95 text-gray-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#6B7A3E] file:text-white hover:file:bg-[#8B9A5E] cursor-pointer"
+                  />
+                </div>
+              </div> */}
+              
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
