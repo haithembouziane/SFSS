@@ -2,6 +2,8 @@
 
 import os
 import json
+import sys
+import argparse
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -20,12 +22,18 @@ LABEL_MAP_PATH = os.getenv('LABEL_MAP_PATH', 'label_map.json')
 PORT = int(os.getenv('PORT', 5000))
 HOST = os.getenv('HOST', '0.0.0.0')
 
-# Initialize predictor
+# Initialize predictor with output directories
 try:
-    predictor = CropPredictor(MODEL_PATH, LABEL_MAP_PATH)
+    predictor = CropPredictor(
+        MODEL_PATH, 
+        LABEL_MAP_PATH,
+        output_dir=os.getenv('CROP_OUTPUT_DIR', 'predictions/crop_predictions')
+    )
 except Exception as e:
     print(f"Error loading model: {e}")
     predictor = None
+
+# REMOVED: Yield predictor initialization
 
 
 @app.route('/', methods=['GET'])
@@ -110,9 +118,69 @@ def server_error(error):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Crop Predictor API')
+    parser.add_argument('--server', action='store_true', help='Run as Flask server')
+    parser.add_argument('--test-crop', type=str, help='Test crop prediction with JSON string')
+    parser.add_argument('--test-crop-file', type=str, help='Test crop prediction with JSON file')
+    
+    args = parser.parse_args()
+    
+    # Load models
     if predictor is None:
-        print("ERROR: Model failed to load. Exiting.")
-        exit(1)
+        print("ERROR: Crop prediction model failed to load.")
+    
+    # Terminal Testing Mode
+    if args.test_crop or args.test_crop_file:
+        if not predictor:
+            print("ERROR: Crop predictor not loaded")
+            sys.exit(1)
+        
+        try:
+            if args.test_crop_file:
+                with open(args.test_crop_file, 'r') as f:
+                    data = json.load(f)
+            else:
+                data = json.loads(args.test_crop)
+            
+            print("\n" + "="*60)
+            print("CROP PREDICTION TEST")
+            print("="*60)
+            print(f"Input Features: {json.dumps(data, indent=2)}")
+            
+            if isinstance(data, dict):
+                result = predictor.predict(data)
+            elif isinstance(data, list):
+                result = predictor.predict_batch(data)
+            else:
+                print("ERROR: Expected dict or list")
+                sys.exit(1)
+            
+            print(f"\nPrediction Result:\n{json.dumps(result, indent=2)}")
+            print("="*60 + "\n")
+        except json.JSONDecodeError as e:
+            print(f"ERROR: Invalid JSON - {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"ERROR: {str(e)}")
+            sys.exit(1)
+    
+    elif args.server:
+        if predictor is None:
+            print("ERROR: Crop model not loaded. Exiting.")
+            sys.exit(1)
+        
+        print(f"Starting Crop Predictor API on {HOST}:{PORT}")
+        app.run(host=HOST, port=PORT, debug=False)
+    
+    else:
+        # Default: Run server
+        if predictor is None:
+            print("ERROR: Crop model not loaded. Exiting.")
+            sys.exit(1)
 
-    print(f"Starting Crop Predictor API on {HOST}:{PORT}")
-    app.run(host=HOST, port=PORT, debug=False)
+        print(f"Starting Crop Predictor API on {HOST}:{PORT}")
+        print("\nTerminal Testing Commands:")
+        print("  Crop Prediction:   python app.py --test-crop '{\"N\": 50, \"P\": 40, ...}'")
+        print("  From JSON File:    python app.py --test-crop-file path/to/file.json")
+        print("  Run Server:        python app.py --server\n")
+        app.run(host=HOST, port=PORT, debug=False)
