@@ -167,6 +167,13 @@ const Signup = () => {
                 Back to home page
               </Link>
             </div>
+
+            {/* Skip Link */}
+            <div className="text-center mt-4">
+              <Link to="/crop-yield" className="skip-link text-sm text-gray-600 hover:text-[#6B7A3E] transition-colors">
+                Skip registration and continue as guest
+              </Link>
+            </div>
           </form>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
+import { Link } from 'react-router-dom';
+import bgImage from '../assets/bg.png';
 
 const CropPrediction = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +37,7 @@ const CropPrediction = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-green-50">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${bgImage})` }}>
       <DashboardHeader />
       
       <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">

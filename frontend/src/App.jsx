@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
 import Landing from './pages/landing';
 import Login from './pages/login';
 import Signup from './pages/signup';
@@ -10,7 +8,6 @@ import Profile from './pages/Profile';
 
 export default function App() {
   return (
-    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />} />
@@ -21,29 +18,22 @@ export default function App() {
           <Route 
             path="/crop-yield" 
             element={
-              <ProtectedRoute>
                 <CropYieldPrediction />
-              </ProtectedRoute>
             } 
           />
           <Route 
             path="/crop-prediction" 
             element={
-              <ProtectedRoute>
                 <CropPrediction />
-              </ProtectedRoute>
             } 
           />
           <Route 
             path="/profile" 
             element={
-              <ProtectedRoute>
                 <Profile />
-              </ProtectedRoute>
             } 
           />
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
   );
 }
