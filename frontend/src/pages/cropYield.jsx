@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import { Link } from 'react-router-dom';
 import bgImage from '../assets/bg.png';
+import Footer from '../components/Footer';
 
 const CropPrediction = () => {
   const [formData, setFormData] = useState({
@@ -253,41 +254,6 @@ const CropPrediction = () => {
                 <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-black/25 to-transparent"></div>
               </div>
 
-              {/* Yield Input Layer - Bedrock */}
-              <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{
-                background: 'linear-gradient(135deg, #4A5A3E 0%, #3A4A2E 100%)',
-                borderTop: '3px solid #5A6A4E',
-                borderBottom: '4px solid #2A3A1E'
-              }}>
-                <svg className="absolute top-0 left-0 right-0 w-full h-3" preserveAspectRatio="none" viewBox="0 0 1440 48">
-                  <path d="M0,24 Q360,0 720,24 T1440,24 L1440,0 L0,0 Z" fill="#5A6A4E" opacity="0.3"/>
-                </svg>
-                <div className="absolute inset-0 opacity-10" style={{
-                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255,255,255,.03) 4px, rgba(255,255,255,.03) 8px)'
-                }}></div>
-                
-                <div className="p-4 pt-5 relative z-10">
-                  <div className="flex items-center space-x-2 mb-3">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
-                      </svg>
-                    </div>
-                    <h3 className="text-base font-bold text-white drop-shadow-md">Yield (Tons/Ha)</h3>
-                  </div>
-                  <input 
-                    type="number"
-                    step="0.01"
-                    value={formData.yieldTonsPerHectare}
-                    onChange={(e) => handleInputChange('yieldTonsPerHectare', e.target.value)}
-                    placeholder="Enter expected yield"
-                    className="w-full px-3 py-2 rounded-lg bg-white/95 text-gray-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner placeholder:text-gray-500"
-                  />
-                </div>
-                
-                <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-r from-transparent via-black/30 to-transparent"></div>
-              </div>
-
               {/* Submit Button */}
               <button
                 onClick={handleSubmit}
@@ -402,6 +368,8 @@ const CropPrediction = () => {
           </div>
         </div>
       </div>
+    <Footer />
+
     </div>
   );
 };

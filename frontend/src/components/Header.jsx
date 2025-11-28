@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+    <header id='home' className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
+          <Link to="/">
           <div className="flex items-center space-x-2">
             <svg className="w-10 h-10" viewBox="0 0 40 40" fill="none">
               <path d="M20 5L15 15L20 25L25 15L20 5Z" fill="#6B7A3E"/>
@@ -18,7 +19,7 @@ const Header = () => {
               <span className="text-gray-700">-Nova</span>
             </span>
           </div>
-          
+          </Link>     
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-[#6B7A3E] transition-colors">Home</Link>
