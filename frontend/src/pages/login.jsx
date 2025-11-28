@@ -143,7 +143,7 @@ const Login = () => {
             {/* Skip Link */}
             <div className="text-center mt-4">
               <Link to="/crop-yield" className="skip-link text-sm text-[#6B7A3E] hover:text-[#5A6A2E] font-medium underline">
-                Skip login and continue as guest
+                Open Demo
               </Link>
             </div>
           </form>
