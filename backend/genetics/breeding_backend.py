@@ -37,7 +37,14 @@ To use in your API:
 ================================================================================
 """
 
-import numpy as np
+try:
+    import numpy as np
+except ImportError as e:
+    raise ImportError(
+        "NumPy is not installed or not available in the selected Python environment. "
+        "Fix by: (1) Selecting the correct interpreter in VS Code, (2) Activating your virtual env, or (3) running 'pip install numpy'. "
+        f"Original error: {e}"
+    )
 import json
 import os
 from pathlib import Path
@@ -590,8 +597,8 @@ def get_available_traits():
     Returns:
         dict: List of available traits for user selection
     """
+    global parents
     try:
-        global parents
         # Check if parents are defined in the global context
         use_example_data = False
         try:
@@ -603,9 +610,37 @@ def get_available_traits():
         
         # Load example parents if needed
         if use_example_data:
-            
-            parents = load_example_parents()
-            print("⚠️  No parents defined. Using example DNA data from: documentation/DNA_EXAMPLE_Parent*.json")
+            try:
+                parents = load_example_parents()
+                print("⚠️  No parents defined. Using example DNA data from: documentation/DNA_EXAMPLE_Parent*.json")
+            except FileNotFoundError as fe:
+                # Graceful fallback: create minimal in-memory parents with core traits
+                print(f"❌ Error loading example parents from SNP file: {fe}. Using hardcoded fallback parents.")
+                # Create simple allele/genotype placeholders
+                try:
+                    a_dom = Allele('A', 8, True)
+                    b_dom = Allele('B', 7, True)
+                    a_rec = Allele('a', 5, False)
+                    b_rec = Allele('b', 4, False)
+                    parents = {
+                        "Fallback_Parent_A": {
+                            "Yield": Genotype(a_dom, a_dom),
+                            "Disease_Resistance": Genotype(b_dom, b_rec),
+                            "Water_Efficiency": Genotype(a_dom, a_rec),
+                            "Growth_Rate": Genotype(b_dom, b_dom)
+                        },
+                        "Fallback_Parent_B": {
+                            "Yield": Genotype(a_dom, a_rec),
+                            "Disease_Resistance": Genotype(b_dom, b_dom),
+                            "Water_Efficiency": Genotype(a_rec, a_rec),
+                            "Growth_Rate": Genotype(b_dom, b_rec)
+                        }
+                    }
+                except Exception as obj_e:
+                    return {
+                        "status": "error",
+                        "message": f"Failed constructing fallback parents: {obj_e}"
+                    }
         
         first_parent_name = list(parents.keys())[0]
         first_parent_genotypes = parents[first_parent_name]
@@ -617,7 +652,7 @@ def get_available_traits():
             "Disease_Resistance": "Resistance to common diseases",
             "Water_Efficiency": "Water use efficiency under drought",
             "Growth_Rate": "Speed of plant development"
-        }
+        },
         
         result = {
             "status": "success",
@@ -706,6 +741,7 @@ def process_breeding_request(frontend_json_input):
     Returns:
         dict: Backend result ready to send to frontend + saved as JSON file
     """
+    global parents
     
     try:
         # Extract frontend inputs
@@ -727,7 +763,6 @@ def process_breeding_request(frontend_json_input):
             use_example_data = True
         
         if use_example_data:
-            global parents
             parents = load_example_parents()
             print("⚠️  No DNA files provided. Using example parents from documentation folder.")
         
