@@ -1,0 +1,59 @@
+{
+  "_description": "Example SNP data file for candidate parents - Used as fallback when frontend does not provide SNP data",
+  "_instructions": "Each parent has SNP genotypes. The SNP→trait mappings are defined in documentation/dna_trait_map.json",
+  
+  "Parent_A": {
+    "genotypes": {
+      "rs123": "AA",
+      "rs456": "AG",
+      "rs789": "GG",
+      "rs101": "CT"
+    },
+    "source": "SNP array platform 1",
+    "notes": "High yield variety"
+  },
+  
+  "Parent_B": {
+    "genotypes": {
+      "rs123": "AA",
+      "rs456": "AA",
+      "rs789": "AG",
+      "rs101": "CC"
+    },
+    "source": "SNP array platform 1",
+    "notes": "Disease resistant landrace"
+  },
+  
+  "Parent_C": {
+    "genotypes": {
+      "rs123": "AG",
+      "rs456": "GG",
+      "rs789": "GG",
+      "rs101": "TT"
+    },
+    "source": "SNP array platform 2",
+    "notes": "Drought tolerant accession"
+  },
+  
+  "Parent_D": {
+    "genotypes": {
+      "rs123": "AA",
+      "rs456": "AG",
+      "rs789": "AA",
+      "rs101": "CT"
+    },
+    "source": "SNP array platform 1",
+    "notes": "Elite breeding line"
+  },
+  
+  "Parent_E": {
+    "genotypes": {
+      "rs123": "AA",
+      "rs456": "AA",
+      "rs789": "AG",
+      "rs101": "CC"
+    },
+    "source": "SNP array platform 2",
+    "notes": "Wild relative collection"
+  }
+}
