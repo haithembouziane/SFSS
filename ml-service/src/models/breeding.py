@@ -708,6 +708,7 @@ def process_breeding_request(frontend_json_input):
     """
     
     try:
+        global parents
         # Extract frontend inputs
         wanted_traits = frontend_json_input.get('wanted_traits', [])
         trait_weights = frontend_json_input.get('trait_weights', {})
@@ -721,13 +722,14 @@ def process_breeding_request(frontend_json_input):
         # ⚠️  FALLBACK: Load example parents if not defined
         use_example_data = False
         try:
+
             if not parents or len(parents) == 0:
                 use_example_data = True
         except NameError:
             use_example_data = True
         
         if use_example_data:
-            global parents
+            
             parents = load_example_parents()
             print("⚠️  No DNA files provided. Using example parents from documentation folder.")
         

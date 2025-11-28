@@ -3,6 +3,7 @@ import DashboardHeader from '../components/DashboardHeader';
 import { Link } from 'react-router-dom';
 import bgImage from '../assets/bg.png';
 import Footer from '../components/Footer';
+import { fetchBreedingTraits, processBreeding } from '../services/api';
 
 const CropPrediction = () => {
   const [formData, setFormData] = useState({
@@ -17,18 +18,45 @@ const CropPrediction = () => {
 
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [extractedTraits, setExtractedTraits] = useState(null); // Added missing state
+  const [extractedTraits, setExtractedTraits] = useState(null); // traits or API payload
+  const [breedingResult, setBreedingResult] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    setTimeout(() => {
-      setPrediction({
-        predictedYield: (Math.random() * 3 + 3).toFixed(2)
-      });
+    setBreedingResult(null);
+
+    try {
+      // Fetch traits from backend (uses pre-stored DNA when parents are missing)
+      const traitsResp = await fetchBreedingTraits();
+      setExtractedTraits(traitsResp);
+
+      const wantedTraits = traitsResp.available_traits || [];
+      const equalWeights = Object.fromEntries(wantedTraits.map(t => [t, 1]));
+
+      // Process breeding recommendation
+      const result = await processBreeding(wantedTraits, equalWeights);
+      setBreedingResult(result);
+      console.log(`Breeding result JSON created: ${result.file_created ?? 'unknown'} at ${result.output_file}`);
+    } catch (err) {
+      // Fallback to locally uploaded JSON
+      if (extractedTraits) {
+        const wantedTraits = Array.isArray(extractedTraits)
+          ? extractedTraits
+          : Object.keys(extractedTraits.available_traits || extractedTraits);
+        const equalWeights = Object.fromEntries(wantedTraits.map(t => [t, 1]));
+        try {
+          const result = await processBreeding(wantedTraits, equalWeights);
+          setBreedingResult(result);
+        } catch (innerErr) {
+          alert('Breeding process failed. Ensure the backend is running.');
+        }
+      } else {
+        alert('Could not fetch traits. Upload available_traits.json for local fallback.');
+      }
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -157,6 +185,41 @@ const CropPrediction = () => {
                       {JSON.stringify(extractedTraits, null, 2)}
                     </pre>
                   </div>
+
+                  {breedingResult && (
+                    <div className="mt-6 bg-white/95 rounded-2xl p-6 space-y-4">
+                      <h3 className="text-lg font-bold text-gray-800">Breeding Recommendation</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="rounded-xl border border-gray-200 p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2">Best Cross</h4>
+                          <p className="text-gray-800">{breedingResult.best_cross.parent1} × {breedingResult.best_cross.parent2}</p>
+                        </div>
+                        <div className="rounded-xl border border-gray-200 p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2">Generations to 80%</h4>
+                          <p className="text-gray-800">{breedingResult.generations_to_80_percent}</p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-gray-200 p-4">
+                        <h4 className="font-semibold text-gray-700 mb-3">Expected F1 Traits</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {Object.entries(breedingResult.expected_f1_traits || {}).map(([trait, value]) => (
+                            <div key={trait} className="bg-gray-50 rounded-lg p-3 flex items-center justify-between">
+                              <span className="text-gray-700 font-medium">{trait}</span>
+                              <span className="text-gray-900 font-semibold">{value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {breedingResult.output_file && (
+                        <div className="rounded-xl border border-gray-200 p-4">
+                          <h4 className="font-semibold text-gray-700 mb-2">Saved Output</h4>
+                          <p className="text-gray-800 break-all">{breedingResult.output_file}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="relative rounded-3xl h-full min-h-[600px] flex items-center justify-center p-8" style={{
@@ -168,7 +231,7 @@ const CropPrediction = () => {
                       <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
                     </svg>
                     <h3 className="text-2xl font-bold text-white mb-3 drop-shadow-md">No Analysis Results Yet</h3>
-                    <p className="text-white/80 max-w-md text-lg">Upload available_traits.json on the left to see extracted traits analysis.</p>
+                    <p className="text-white/80 max-w-md text-lg">Press submit to fetch traits, or upload available_traits.json for local fallback.</p>
                   </div>
                 </div>
               )}
