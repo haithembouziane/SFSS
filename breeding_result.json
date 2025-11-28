@@ -1,0 +1,19 @@
+{
+  "status": "success",
+  "wanted_traits": [
+    "Yield",
+    "Disease_Resistance",
+    "Water_Efficiency"
+  ],
+  "best_cross": {
+    "parent1": "Parent_A",
+    "parent2": "Parent_B"
+  },
+  "expected_f1_traits": {
+    "Yield": 0.7804,
+    "Disease_Resistance": 0.4332,
+    "Water_Efficiency": 0.54
+  },
+  "generations_to_80_percent": 1,
+  "output_file": "C:\\Users\\cherf\\OneDrive\\Documents\\GitHub\\SFSS\\breeding_result.json"
+}

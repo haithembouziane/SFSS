@@ -1,0 +1,5 @@
+{
+  "rsY1": { "trait": "Yield", "AA": 0.9, "AG": 0.7, "GG": 0.4 },
+  "rsD1": { "trait": "Disease_Resistance", "AA": 0.8, "AG": 0.6, "GG": 0.3 },
+  "rsW1": { "trait": "Water_Efficiency", "AA": 0.85, "AG": 0.65, "GG": 0.5 }
+}

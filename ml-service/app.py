@@ -8,6 +8,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from src.models.predictor import CropPredictor
+from src.models.breeding import get_available_traits
 from src.utils.validation import validate_features, validate_batch
 
 # Load environment variables
@@ -103,6 +104,17 @@ def predict():
         return jsonify({'error': 'Invalid JSON'}), 400
     except Exception as e:
         return jsonify({'error': f'Prediction failed: {str(e)}'}), 500
+
+
+@app.route('/breeding/traits', methods=['GET'])
+def breeding_traits():
+    """Return available traits using pre-stored DNA examples."""
+    try:
+        result = get_available_traits()
+        status_code = 200 if result.get('status') == 'success' else 500
+        return jsonify(result), status_code
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 @app.errorhandler(404)

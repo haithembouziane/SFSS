@@ -1,0 +1,16 @@
+{
+  "status": "success",
+  "available_traits": [
+    "Yield",
+    "Disease_Resistance",
+    "Water_Efficiency",
+    "Growth_Rate"
+  ],
+  "trait_descriptions": {
+    "Yield": "Total grain/biomass production",
+    "Disease_Resistance": "Resistance to common diseases",
+    "Water_Efficiency": "Water use efficiency under drought",
+    "Growth_Rate": "Speed of plant development"
+  },
+  "using_example_data": true
+}
