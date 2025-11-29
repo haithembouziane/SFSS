@@ -11,12 +11,12 @@
     "parent2": "Parent_E"
   },
   "expected_f1_traits": {
-    "Yield": 0.723,
-    "Disease_Resistance": 0.7884,
+    "Yield": 0.719,
+    "Disease_Resistance": 0.7878,
     "Water_Efficiency": 0.5,
     "Growth_Rate": 0.5
   },
   "generations_to_80_percent": 3,
   "output_file": "/home/mehdi/1Clubs/SFSS/ml-service/src/models/breeding_result.json",
-  "f1_mean_fitness": 0.6279
+  "f1_mean_fitness": 0.6267
 }
