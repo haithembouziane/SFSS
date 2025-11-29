@@ -1,0 +1,161 @@
+{
+  "status": "success",
+  "wanted_traits": [
+    "Yield",
+    "Disease_Resistance",
+    "Water_Efficiency",
+    "Growth_Rate"
+  ],
+  "best_cross": {
+    "parent1": "Parent_D",
+    "parent2": "Parent_E"
+  },
+  "expected_f1_traits": {
+    "Yield": 0.708,
+    "Disease_Resistance": 0.787,
+    "Water_Efficiency": 0.5,
+    "Growth_Rate": 0.5
+  },
+  "generations_to_80_percent": 15,
+  "f1_mean_fitness": 0.6238,
+  "multi_generation_result": {
+    "generations_to_target": 15,
+    "generation_progress": [
+      {
+        "generation": 1,
+        "mean_fitness": 0.6291,
+        "std_fitness": 0.0368,
+        "mean": 0.6291,
+        "std": 0.0368,
+        "population_size": 200
+      },
+      {
+        "generation": 2,
+        "mean_fitness": 0.654,
+        "std_fitness": 0.0292,
+        "mean": 0.654,
+        "std": 0.0292,
+        "population_size": 2000
+      },
+      {
+        "generation": 3,
+        "mean_fitness": 0.6671,
+        "std_fitness": 0.0277,
+        "mean": 0.6671,
+        "std": 0.0277,
+        "population_size": 2000
+      },
+      {
+        "generation": 4,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 5,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 6,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 7,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 8,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 9,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 10,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 11,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 12,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 13,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 14,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      },
+      {
+        "generation": 15,
+        "mean_fitness": 0.6813,
+        "std_fitness": 0.0,
+        "mean": 0.6813,
+        "std": 0.0,
+        "population_size": 2000
+      }
+    ],
+    "final_mean_fitness": 0.6813,
+    "final_std_fitness": 0.0,
+    "final_trait_means": {
+      "Yield": 8.25,
+      "Disease_Resistance": 9.0,
+      "Water_Efficiency": 5.0,
+      "Growth_Rate": 5.0
+    }
+  },
+  "final_generation_traits": {
+    "Yield": 8.25,
+    "Disease_Resistance": 9.0,
+    "Water_Efficiency": 5.0,
+    "Growth_Rate": 5.0
+  },
+  "output_file": "/home/hai_bou.19/Desktop/SFSS/ml-service/genetics/ml-service/src/models/breeding_result.json"
+}

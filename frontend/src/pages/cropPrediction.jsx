@@ -2,31 +2,56 @@ import React, { useState } from "react";
 import DashboardHeader from "../components/DashboardHeader";
 import Footer from "../components/Footer";
 import bgImage from '../assets/bg.png';
+import { predictCrop } from "../services/api";
+
+// Import all crop images from assets
+import riceImg from '../assets/rice.jpeg';
+import maizeImg from '../assets/maize.jpeg';
+import chickpeaImg from '../assets/chickpea.jpeg';
+import kidneybeansImg from '../assets/kidneybeans.jpeg';
+import pigeonpeasImg from '../assets/pigeonpeas.jpeg';
+import mothbeansImg from '../assets/mothbeans.jpeg';
+import mungbeanImg from '../assets/mungbean.jpeg';
+import blackgramImg from '../assets/blackgram.jpeg';
+import lentilImg from '../assets/lentil.jpeg';
+import pomegranateImg from '../assets/pomegranate.jpeg';
+import bananaImg from '../assets/banana.jpeg';
+import mangoImg from '../assets/mango.jpeg';
+import grapesImg from '../assets/grapes.jpeg';
+import watermelonImg from '../assets/watermelon.jpeg';
+import muskelonImg from '../assets/muskmelon.jpeg';
+import appleImg from '../assets/apple.jpeg';
+import orangeImg from '../assets/orange.jpeg';
+import papayaImg from '../assets/papaya.jpeg';
+import coconutImg from '../assets/coconut.jpeg';
+import cottonImg from '../assets/cotton.jpeg';
+import juteImg from '../assets/jute.jpeg';
+import coffeeImg from '../assets/coffee.jpeg';
 
 // --- Crop Images ---
 const cropImages = {
-  rice: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6",
-  maize: "https://images.unsplash.com/photo-1524592094714-0f0654e20314",
-  chickpea: "https://images.unsplash.com/photo-1605478374329-e58aab6fa410",
-  kidneybeans: "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
-  pigeonpeas: "https://images.unsplash.com/photo-1615485297655-df3c34e65e4f",
-  mothbeans: "https://images.unsplash.com/photo-1580934738413-d61a2d2b6b34",
-  mungbean: "https://images.unsplash.com/photo-1622209152408-2f03f06abb52",
-  blackgram: "https://images.unsplash.com/photo-1622481321218-ec3d815e4ee7",
-  lentil: "https://images.unsplash.com/photo-1607690426272-0c7f3e20ad01",
-  pomegranate: "https://images.unsplash.com/photo-1571047399553-4a58ba9a5b6c",
-  banana: "https://images.unsplash.com/photo-1574226516831-e1dff420e43e",
-  mango: "https://images.unsplash.com/photo-1508747703725-719777637510",
-  grapes: "https://images.unsplash.com/photo-1506806732259-39c2d0268443",
-  watermelon: "https://images.unsplash.com/photo-1560807707-8cc77767d783",
-  muskmelon: "https://images.unsplash.com/photo-1622209152408-2f03f06abb52",
-  apple: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce",
-  orange: "https://images.unsplash.com/photo-1547514701-09c7b4a3a67b",
-  papaya: "https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2",
-  coconut: "https://images.unsplash.com/photo-1602526216439-dc1c2afe7f40",
-  cotton: "https://images.unsplash.com/photo-1602526216439-dc1c2afe7f40",
-  jute: "https://images.unsplash.com/photo-1556228598-512a82a3c3bb",
-  coffee: "https://images.unsplash.com/photo-1509042239860-f550ce710b93"
+  rice: riceImg,
+  maize: maizeImg,
+  chickpea: chickpeaImg,
+  kidneybeans: kidneybeansImg,
+  pigeonpeas: pigeonpeasImg,
+  mothbeans: mothbeansImg,
+  mungbean: mungbeanImg,
+  blackgram: blackgramImg,
+  lentil: lentilImg,
+  pomegranate: pomegranateImg,
+  banana: bananaImg,
+  mango: mangoImg,
+  grapes: grapesImg,
+  watermelon: watermelonImg,
+  muskmelon: muskelonImg,
+  apple: appleImg,
+  orange: orangeImg,
+  papaya: papayaImg,
+  coconut: coconutImg,
+  cotton: cottonImg,
+  jute: juteImg,
+  coffee: coffeeImg
 };
 
 export default function CropPrediction() {
@@ -42,19 +67,63 @@ export default function CropPrediction() {
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value 
+    }));
+    setError(null); // Clear error when user types
   };
 
-  const predictCrop = () => {
+  const validateForm = () => {
+    const required = ['N', 'P', 'K', 'humidity', 'ph', 'rainfall', 'temperature'];
+    const missing = required.filter(field => !formData[field] || formData[field] === '');
+    
+    if (missing.length > 0) {
+      setError(`Please fill in all fields: ${missing.join(', ')}`);
+      return false;
+    }
+    
+    // Also validate that all values are valid numbers
+    for (let field of required) {
+      const num = parseFloat(formData[field]);
+      if (isNaN(num)) {
+        setError(`${field} must be a valid number`);
+        return false;
+      }
+    }
+    
+    return true;
+  };
+
+  const predictCropHandler = async () => {
+    if (!validateForm()) return;
+    
     setLoading(true);
-    setTimeout(() => {
-      const crops = Object.keys(cropImages);
-      const sample = crops[Math.floor(Math.random() * crops.length)];
-      setResult(sample);
+    setError(null);
+    
+    try {
+      const response = await predictCrop(formData);
+      console.log('Prediction response:', response);
+      
+      // Handle response from ML service
+      const cropLabel = response.pred_label || response.label || 'Unknown';
+      setResult({
+        label: cropLabel,
+        input: formData,
+        timestamp: new Date().toLocaleString(),
+        fullResponse: response
+      });
+      
+    } catch (err) {
+      console.error('Prediction error:', err);
+      setError(`Prediction failed: ${err.message}`);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -66,6 +135,13 @@ export default function CropPrediction() {
           
           {/* LEFT SIDE — FULL INPUT FORM */}
           <div className="space-y-3">
+            
+            {/* Error Alert */}
+            {error && (
+              <div className="rounded-2xl overflow-hidden shadow-md p-4 bg-red-100 border-l-4 border-red-500">
+                <p className="text-red-800 font-semibold">{error}</p>
+              </div>
+            )}
             
             {/* Soil Layer - Topsoil */}
             <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
@@ -239,7 +315,7 @@ export default function CropPrediction() {
 
             {/* Submit Button */}
             <button
-              onClick={predictCrop}
+              onClick={predictCropHandler}
               disabled={loading}
               className="w-full py-3 rounded-xl font-bold text-white text-base shadow-lg transition-all duration-300 hover:shadow-xl disabled:opacity-50 hover:scale-[1.02] relative overflow-hidden"
               style={{
@@ -284,11 +360,11 @@ export default function CropPrediction() {
                   
                   <div className="bg-white/95 rounded-2xl p-6 mb-6">
                     <h3 className="text-3xl font-bold text-[#6B7A3E] mb-4 capitalize text-center">
-                      {result}
+                      {result.label}
                     </h3>
                     <img
-                      src={cropImages[result]}
-                      alt={result}
+                      src={cropImages[result.label.toLowerCase()] || cropImages.rice}
+                      alt={result.label}
                       className="w-full h-64 object-cover rounded-xl shadow-lg"
                     />
                   </div>
@@ -303,33 +379,37 @@ export default function CropPrediction() {
                     <div className="space-y-2 text-sm text-gray-700">
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Nitrogen (N):</span>
-                        <span>{formData.N || 'N/A'}</span>
+                        <span>{result.input.N}</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Phosphorus (P):</span>
-                        <span>{formData.P || 'N/A'}</span>
+                        <span>{result.input.P}</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Potassium (K):</span>
-                        <span>{formData.K || 'N/A'}</span>
+                        <span>{result.input.K}</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Humidity:</span>
-                        <span>{formData.humidity ? `${formData.humidity}%` : 'N/A'}</span>
+                        <span>{result.input.humidity}%</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Temperature:</span>
-                        <span>{formData.temperature ? `${formData.temperature}°C` : 'N/A'}</span>
+                        <span>{result.input.temperature}°C</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-200">
                         <span className="font-medium">Rainfall:</span>
-                        <span>{formData.rainfall ? `${formData.rainfall} mm` : 'N/A'}</span>
+                        <span>{result.input.rainfall} mm</span>
                       </div>
                       <div className="flex justify-between py-2">
                         <span className="font-medium">Soil pH:</span>
-                        <span>{formData.ph || 'N/A'}</span>
+                        <span>{result.input.ph}</span>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="mt-4 text-xs text-gray-600 text-center">
+                    <p>Prediction Time: {result.timestamp}</p>
                   </div>
                 </div>
               </div>
@@ -341,10 +421,9 @@ export default function CropPrediction() {
                 <div className="text-center p-8">
                   <svg className="w-24 h-24 mx-auto mb-6 text-white/40" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2c-1.1 0-2 .9-2 2v3c0 .55.45 1 1 1s1-.45 1-1V4c0-.55-.45-1-1-1zm0 16c-.55 0-1 .45-1 1v3c0 1.1.9 2 2 2s2-.9 2-2v-3c0-.55-.45-1-1-1z"/>
-                    <path d="M18 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
                   </svg>
                   <h3 className="text-2xl font-bold text-white mb-3">No Prediction Yet</h3>
-                  <p className="text-white/80 max-w-md">Fill in the form on the left and click "Predict Crop" to see your recommended crop based on the soil and climate conditions.</p>
+                  <p className="text-white/80 max-w-md">Fill in all fields and click "Predict Crop" to get your recommendation. Results will be automatically downloaded as JSON.</p>
                 </div>
               </div>
             )}

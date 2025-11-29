@@ -1,0 +1,12 @@
+{
+  "Rainfall_mm": 800.0,
+  "Temperature_Celsius": 26.0,
+  "Soil_Type": "Loam",
+  "Crop": "Wheat",
+  "Weather_Condition": "Sunny",
+  "Fertilizer_Used": true,
+  "Irrigation_Used": false,
+  "predicted_yield": 6.02,
+  "unit": "tons_per_hectare",
+  "model": "linear_regression_pipeline.pkl"
+}

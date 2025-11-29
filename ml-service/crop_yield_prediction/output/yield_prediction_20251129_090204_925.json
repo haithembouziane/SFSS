@@ -1,0 +1,10 @@
+{
+  "Rainfall_mm": 3000.0,
+  "Temperature_Celsius": 28.0,
+  "Soil_Type": "Silty",
+  "Crop": "Corn",
+  "Weather_Condition": "Cloudy",
+  "Fertilizer_Used": false,
+  "Irrigation_Used": true,
+  "predicted_yield": 83535753171.12
+}

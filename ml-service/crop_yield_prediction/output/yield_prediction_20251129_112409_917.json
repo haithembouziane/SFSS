@@ -1,0 +1,10 @@
+{
+  "Rainfall_mm": 100.0,
+  "Temperature_Celsius": 25.0,
+  "Soil_Type": "Loam",
+  "Crop": "Cotton",
+  "Weather_Condition": "Rainy",
+  "Fertilizer_Used": false,
+  "Irrigation_Used": true,
+  "predicted_yield": 2.2
+}

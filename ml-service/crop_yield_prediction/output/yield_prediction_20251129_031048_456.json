@@ -1,0 +1,10 @@
+{
+  "Rainfall_mm": 300.0,
+  "Temperature_Celsius": 30.0,
+  "Soil_Type": "Loam",
+  "Crop": "Wheat",
+  "Weather_Condition": "Sunny",
+  "Fertilizer_Used": true,
+  "Irrigation_Used": true,
+  "predicted_yield": 4.8
+}

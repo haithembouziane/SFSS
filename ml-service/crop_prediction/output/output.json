@@ -1,0 +1,12 @@
+[
+  {
+    "K": 43.0,
+    "N": 90.0,
+    "P": 42.0,
+    "humidity": 82.0,
+    "ph": 6.5,
+    "pred_label": "rice",
+    "rainfall": 202.94,
+    "temperature": 20.88
+  }
+]

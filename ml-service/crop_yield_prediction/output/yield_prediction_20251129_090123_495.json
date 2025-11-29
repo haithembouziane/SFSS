@@ -1,0 +1,10 @@
+{
+  "Rainfall_mm": 3000.0,
+  "Temperature_Celsius": 30.0,
+  "Soil_Type": "Loam",
+  "Crop": "Sugarcane",
+  "Weather_Condition": "Cloudy",
+  "Fertilizer_Used": true,
+  "Irrigation_Used": true,
+  "predicted_yield": 18685777315.04
+}

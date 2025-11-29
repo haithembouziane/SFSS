@@ -1,0 +1,68 @@
+{
+  "_description": "SNP → Trait Association Map for crop breeding",
+  "_instructions": "Each SNP entry maps genotypes (AA/AG/GG) to phenotype scores (0-1). Multiple SNPs can control the same trait (polygenic inheritance).",
+  
+  "rs123": {
+    "trait": "Yield",
+    "AA": 0.85,
+    "AG": 0.70,
+    "GG": 0.45,
+    "_description": "Major yield QTL - high expression with dominant allele"
+  },
+  
+  "rs456": {
+    "trait": "Yield",
+    "AA": 0.80,
+    "AG": 0.65,
+    "GG": 0.50,
+    "_description": "Secondary yield locus - polygenic contribution"
+  },
+  
+  "rs789": {
+    "trait": "Disease_Resistance",
+    "AA": 0.90,
+    "AG": 0.75,
+    "GG": 0.40,
+    "_description": "Disease resistance QTL - strong dominant effect"
+  },
+  
+  "rs101": {
+    "trait": "Disease_Resistance",
+    "AA": 0.85,
+    "AG": 0.68,
+    "GG": 0.35,
+    "_description": "Secondary disease resistance locus"
+  },
+  
+  "rs202": {
+    "trait": "Water_Efficiency",
+    "AA": 0.80,
+    "AG": 0.62,
+    "GG": 0.45,
+    "_description": "Water use efficiency under drought conditions"
+  },
+  
+  "rs303": {
+    "trait": "Water_Efficiency",
+    "AA": 0.75,
+    "AG": 0.60,
+    "GG": 0.40,
+    "_description": "Secondary water efficiency locus"
+  },
+  
+  "rs404": {
+    "trait": "Growth_Rate",
+    "AA": 0.88,
+    "AG": 0.72,
+    "GG": 0.50,
+    "_description": "Early growth vigor QTL - rapid development"
+  },
+  
+  "rs505": {
+    "trait": "Growth_Rate",
+    "AA": 0.82,
+    "AG": 0.68,
+    "GG": 0.42,
+    "_description": "Secondary growth rate locus - plant maturity timing"
+  }
+}

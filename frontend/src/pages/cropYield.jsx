@@ -3,31 +3,62 @@ import DashboardHeader from '../components/DashboardHeader';
 import { Link } from 'react-router-dom';
 import bgImage from '../assets/bg.png';
 import Footer from '../components/Footer';
+import { predictYield } from '../services/api';
 
-const CropPrediction = () => {
+const CropYieldPrediction = () => {
   const [formData, setFormData] = useState({
     soilType: 'Loam',
     crop: 'Wheat',
     rainfall: '',
+    temperature: '',
     fertilizerUsed: 'yes',
     irrigationUsed: 'yes',
-    weatherConditions: 'sunny',
-    yieldTonsPerHectare: ''
+    weatherConditions: 'sunny'
   });
 
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const validateForm = () => {
+    if (!formData.rainfall || !formData.temperature) {
+      setError('Please fill in all required fields (Rainfall and Temperature)');
+      return false;
+    }
+    
+    if (isNaN(parseFloat(formData.rainfall)) || isNaN(parseFloat(formData.temperature))) {
+      setError('Rainfall and Temperature must be valid numbers');
+      return false;
+    }
+    
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     
-    setTimeout(() => {
+    if (!validateForm()) return;
+    
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await predictYield(formData);
+      console.log('Yield prediction response:', response);
+      
       setPrediction({
-        predictedYield: (Math.random() * 3 + 3).toFixed(2)
+        predictedYield: response.predicted_yield,
+        input: formData,
+        timestamp: new Date().toLocaleString(),
+        fullResponse: response
       });
+      
+    } catch (err) {
+      console.error('Prediction error:', err);
+      setError(`Prediction failed: ${err.message}`);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -35,6 +66,7 @@ const CropPrediction = () => {
       ...prev,
       [field]: value
     }));
+    setError(null);
   };
 
   return (
@@ -47,6 +79,13 @@ const CropPrediction = () => {
             
             {/* Left Side - Input Form */}
             <div className="space-y-3">
+              
+              {/* Error Alert */}
+              {error && (
+                <div className="rounded-2xl overflow-hidden shadow-md p-4 bg-red-100 border-l-4 border-red-500">
+                  <p className="text-red-800 font-semibold">{error}</p>
+                </div>
+              )}
               
               {/* Soil Type Layer - Topsoil */}
               <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
@@ -147,7 +186,7 @@ const CropPrediction = () => {
                         <path d="M12 2c-3.31 0-6 2.69-6 6 0 4.5 6 10 6 10s6-5.5 6-10c0-3.31-2.69-6-6-6zm0 8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
                       </svg>
                     </div>
-                    <h3 className="text-base font-bold text-white drop-shadow-md">Rainfall (mm)</h3>
+                    <h3 className="text-base font-bold text-white drop-shadow-md">Rainfall (mm) *</h3>
                   </div>
                   <input 
                     type="number"
@@ -162,7 +201,7 @@ const CropPrediction = () => {
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-black/20 to-transparent"></div>
               </div>
 
-              {/* Fertilizer & Irrigation Layer */}
+              {/* Temperature Layer */}
               <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
                 background: 'linear-gradient(135deg, #6B7A3E 0%, #5A6A2E 100%)',
                 borderTop: '3px solid #7D8C4F',
@@ -175,7 +214,42 @@ const CropPrediction = () => {
                   backgroundImage: 'repeating-linear-gradient(60deg, transparent, transparent 4px, rgba(255,255,255,.05) 4px, rgba(255,255,255,.05) 8px)'
                 }}></div>
                 
-                <div className="p-4 pt-6 space-y-3 relative z-10">
+                <div className="p-4 pt-5 relative z-10">
+                  <div className="flex items-center space-x-2 mb-3">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+                      </svg>
+                    </div>
+                    <h3 className="text-base font-bold text-white drop-shadow-md">Temperature (°C) *</h3>
+                  </div>
+                  <input 
+                    type="number"
+                    step="0.1"
+                    value={formData.temperature}
+                    onChange={(e) => handleInputChange('temperature', e.target.value)}
+                    placeholder="Enter temperature"
+                    className="w-full px-3 py-2 rounded-lg bg-white/95 text-gray-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner placeholder:text-gray-500"
+                  />
+                </div>
+                
+                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-transparent via-black/20 to-transparent"></div>
+              </div>
+
+              {/* Fertilizer & Irrigation Layer */}
+              <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
+                background: 'linear-gradient(135deg, #5A6A4E 0%, #4A5A3E 100%)',
+                borderTop: '2px solid #6B7A5E',
+                borderBottom: '3px solid #3A4A2E'
+              }}>
+                <svg className="absolute top-0 left-0 right-0 w-full h-3" preserveAspectRatio="none" viewBox="0 0 1440 48">
+                  <path d="M0,24 Q360,48 720,24 T1440,24 L1440,0 L0,0 Z" fill="#6B7A3E" opacity="0.3"/>
+                </svg>
+                <div className="absolute inset-0 opacity-10" style={{
+                  backgroundImage: 'repeating-linear-gradient(120deg, transparent, transparent 3px, rgba(255,255,255,.05) 3px, rgba(255,255,255,.05) 6px)'
+                }}></div>
+                
+                <div className="p-4 pt-5 space-y-3 relative z-10">
                   <div>
                     <div className="flex items-center space-x-2 mb-2">
                       <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -220,15 +294,15 @@ const CropPrediction = () => {
 
               {/* Weather Conditions Layer */}
               <div className="relative rounded-2xl overflow-hidden shadow-md" style={{
-                background: 'linear-gradient(135deg, #5A6A4E 0%, #4A5A3E 100%)',
-                borderTop: '2px solid #6B7A5E',
-                borderBottom: '3px solid #3A4A2E'
+                background: 'linear-gradient(135deg, #4A5A3E 0%, #3A4A2E 100%)',
+                borderTop: '2px solid #5B6B4E',
+                borderBottom: '3px solid #2A3A1E'
               }}>
                 <svg className="absolute top-0 left-0 right-0 w-full h-3" preserveAspectRatio="none" viewBox="0 0 1440 48">
-                  <path d="M0,24 Q360,48 720,24 T1440,24 L1440,0 L0,0 Z" fill="#6B7A3E" opacity="0.3"/>
+                  <path d="M0,24 Q360,0 720,24 T1440,24 L1440,0 L0,0 Z" fill="#5A6A3E" opacity="0.3"/>
                 </svg>
                 <div className="absolute inset-0 opacity-10" style={{
-                  backgroundImage: 'repeating-linear-gradient(120deg, transparent, transparent 3px, rgba(255,255,255,.05) 3px, rgba(255,255,255,.05) 6px)'
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(255,255,255,.05) 3px, rgba(255,255,255,.05) 6px)'
                 }}></div>
                 
                 <div className="p-4 pt-5 relative z-10">
@@ -245,9 +319,9 @@ const CropPrediction = () => {
                     onChange={(e) => handleInputChange('weatherConditions', e.target.value)}
                     className="w-full px-3 py-2 rounded-lg bg-white/95 text-gray-800 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 shadow-inner"
                   >
-                    <option value="sunny">Sunny</option>
-                    <option value="rainy">Rainy</option>
-                    <option value="cloudy">Cloudy</option>
+                    <option value="Sunny">Sunny</option>
+                    <option value="Rainy">Rainy</option>
+                    <option value="Cloudy">Cloudy</option>
                   </select>
                 </div>
                 
@@ -277,7 +351,7 @@ const CropPrediction = () => {
                   </span>
                 ) : (
                   <span className="flex items-center justify-center relative z-10">
-                    Submit Analysis
+                    Predict Yield
                     <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
@@ -319,34 +393,42 @@ const CropPrediction = () => {
                         <svg className="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                         </svg>
-                        Prediction Details
+                        Input Parameters
                       </h3>
                       <div className="space-y-2 text-sm text-gray-700">
                         <div className="flex justify-between py-2 border-b border-gray-200">
                           <span className="font-medium">Soil Type:</span>
-                          <span>{formData.soilType}</span>
+                          <span>{prediction.input.soilType}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-200">
                           <span className="font-medium">Crop:</span>
-                          <span>{formData.crop}</span>
+                          <span>{prediction.input.crop}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-200">
                           <span className="font-medium">Rainfall:</span>
-                          <span>{formData.rainfall} mm</span>
+                          <span>{prediction.input.rainfall} mm</span>
+                        </div>
+                        <div className="flex justify-between py-2 border-b border-gray-200">
+                          <span className="font-medium">Temperature:</span>
+                          <span>{prediction.input.temperature}°C</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-200">
                           <span className="font-medium">Fertilizer:</span>
-                          <span className="capitalize">{formData.fertilizerUsed}</span>
+                          <span className="capitalize">{prediction.input.fertilizerUsed}</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-200">
                           <span className="font-medium">Irrigation:</span>
-                          <span className="capitalize">{formData.irrigationUsed}</span>
+                          <span className="capitalize">{prediction.input.irrigationUsed}</span>
                         </div>
                         <div className="flex justify-between py-2">
                           <span className="font-medium">Weather:</span>
-                          <span className="capitalize">{formData.weatherConditions}</span>
+                          <span className="capitalize">{prediction.input.weatherConditions}</span>
                         </div>
                       </div>
+                    </div>
+
+                    <div className="mt-4 text-xs text-gray-600 text-center">
+                      <p>Prediction Time: {prediction.timestamp}</p>
                     </div>
                   </div>
                 </div>
@@ -360,7 +442,7 @@ const CropPrediction = () => {
                       <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
                     </svg>
                     <h3 className="text-2xl font-bold text-white mb-3">No Prediction Yet</h3>
-                    <p className="text-white/80 max-w-md">Fill in the form on the left and click "Submit for Analysis" to see your crop yield prediction results here.</p>
+                    <p className="text-white/80 max-w-md">Fill in all required fields (marked with *) and click "Predict Yield" to get your crop yield prediction. Results will be automatically downloaded as JSON.</p>
                   </div>
                 </div>
               )}
@@ -368,10 +450,9 @@ const CropPrediction = () => {
           </div>
         </div>
       </div>
-    <Footer />
-
+      <Footer />
     </div>
   );
 };
 
-export default CropPrediction;
+export default CropYieldPrediction;
